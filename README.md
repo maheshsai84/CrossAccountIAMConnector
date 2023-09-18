@@ -1,6 +1,4 @@
-# CrossAccountIAMConnector
-
-How to access Cross Account MSK Connect with AWS MSK through IAM Authentication
+# How to access Cross Account MSK Connect with AWS MSK through IAM Authentication
 
 Amazon Managed Streaming for Apache Kafka (MSK) Connect is a fully managed, scalable, and highly available service that enables the streaming of data between Apache Kafka and other data systems. MSK Connect is built on top of Kafka Connect, an open-source framework that provides a standard way to connect Kafka with external data systems. Kafka Connect supports a variety of connectors, which are used to stream data in and out of Kafka. MSK Connect extends the capabilities of Kafka Connect by providing a managed service with added security features, easier configuration, and automatic scaling capabilities, enabling businesses to focus on their data streaming needs without the overhead of managing the underlying infrastructure.
 
