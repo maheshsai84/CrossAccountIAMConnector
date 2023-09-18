@@ -1,0 +1,16 @@
+# CrossAccountIAMConnector
+
+How to access Cross Account MSK Connect with AWS MSK through IAM Authentication
+
+Amazon Managed Streaming for Apache Kafka (MSK) Connect is a fully managed, scalable, and highly available service that enables the streaming of data between Apache Kafka and other data systems. MSK Connect is built on top of Kafka Connect, an open-source framework that provides a standard way to connect Kafka with external data systems. Kafka Connect supports a variety of connectors, which are used to stream data in and out of Kafka. MSK Connect extends the capabilities of Kafka Connect by providing a managed service with added security features, easier configuration, and automatic scaling capabilities, enabling businesses to focus on their data streaming needs without the overhead of managing the underlying infrastructure.
+
+We have observed an increasing number of customers who require the capability to use an MSK cluster in one AWS account, while the MSK Connector is located in a separate account. In this blog post, we demonstrate how to create a connector to enable this use case. The connector can be configured for a variety of purposes, such as sink data to an S3 bucket or tracking the source database changes, or serving as a migration tool, such as MirrorMaker2 on MSK Connect, to transfer data from a source cluster to a target cluster which are located in different accounts.
+
+
+Currently MSK connectors can be created only for MSK clusters which have IAM role-based authentication or no authentication. Establishing a simple VPC peering between two accounts with an unauthenticated cluster can easily achieve the desired result. However, the process becomes more complex when it comes to an IAM Authentication-enabled cluster which provides the secure communication between the resources. In a normal scenario, cross-account IAM connections are established through the assume role method, which requires the creation of multiple IAM roles. Unfortunately, this method is not suitable between MSK Connect and cross account MSK Cluster, as resource-based policies are not supported by MSK Clusters to accept/trust the cross account connections.
+
+Fortunately, Amazon Managed Streaming for Apache Kafka (Amazon MSK) now provides multi-VPC private connectivity (powered by AWS PrivateLink) and cluster policy support for MSK clusters, simplifying the connectivity of Kafka clients to brokers. By enabling this Private Link feature on our source MSK Cluster, we can leverage the cluster-based policy to achieve our goals. This blog post will cover the process of enabling this feature on our source MSK Cluster.
+
+ Please note that we are not utilizing the complete AWS Private Link feature in this scenario, as it generates multi-VPC Private endpoint brokers with ports 14003/02/01, which are not currently supported by the MSK Connect Service.
+
+ Instead, we are using Amazon VPC Peering for network connectivity purposes. Amazon VPC peering is a straightforward networking construct that enables bidirectional connectivity between two VPCs. In this approach, the network administrator is responsible for updating each VPC with the IP addresses of each broker in the routing tables of all subnets. However, this connectivity pattern cannot be used when there are overlapping IPv4 or IPv6 CIDR blocks in the VPCs.
